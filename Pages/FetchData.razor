@@ -1,0 +1,140 @@
+﻿@page "/chart2"
+@inject HttpClient Http
+@namespace Galaxy
+
+<MudGrid>
+
+        <MudItem xs="12">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=12</MudPaper>
+    </MudItem>
+    <MudItem xs="6">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=6</MudPaper>
+    </MudItem>
+    <MudItem xs="6">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=6</MudPaper>
+    </MudItem>
+    <MudItem xs="3">
+       <Chart 
+            Style="width: 80%;" 
+            @ref ="SpiderChart"
+            ColorScheme="ChartColorScheme.Scheme29" 
+            OnReady="OnChartReady" 
+            SeriesGroups="@interestsSeriesGroups" 
+            XAxis="@interestsXAxis" 
+            DataSource="@interstsData">
+        </Chart>
+    </MudItem>
+    <MudItem xs="3">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=3</MudPaper>
+    </MudItem>
+    <MudItem xs="3">
+        <MudChart ChartType="MudBlazor.ChartType.Line" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+    </MudItem>
+ <MudItem xs="2">
+
+    </MudItem>
+</MudGrid>
+
+
+     <Galaxy.SpiderChart
+        SpiderChartRef="@SpiderChart"
+        InterestsData = "@interstsData"
+
+        DataSource = "@interstsData"
+        XAxis = "@interestsXAxis"
+        SeriesGroups = "@interestsSeriesGroups"
+
+        InterestsSeriesGroups = "@interestsSeriesGroups"
+        InterestsXAxis = "@interestsXAxis"
+         >
+     </Galaxy.SpiderChart>
+       
+@code {
+
+
+    public List<ChartSeries> Series = new List<ChartSeries>();
+    public ChartOptions Options = new ChartOptions();
+    public string[] XAxisLabels = { "1986-04-20", "1986-04-21", "1986-04-22", "1986-04-23", "1986-04-24", "1986-04-25", "1986-04-26" };
+    protected override void OnInitialized()
+    {
+        double[] Data1 = { 65, 68, 70, 74, 74, 72, 74 };
+        double[] Data2 = { 88, 90, 91, 92, 91, 90, 90 };
+        double[] Data3 = { 89, 91, 92, 92, 92, 92, 91 };
+        double[] Data4 = { 85, 86, 90, 90, 92, 99, 0 };
+
+
+        Series.Add(new ChartSeries() { Name = "Chernobyl-1", Data = Data1 });
+        Series.Add(new ChartSeries() { Name = "Chernobyl-2", Data = Data2 });
+        Series.Add(new ChartSeries() { Name = "Chernobyl-3", Data = Data3 });
+        Series.Add(new ChartSeries() { Name = "Chernobyl-4", Data = Data4 });
+
+        Options.YAxisTicks = 400;
+
+        StateHasChanged();
+    }
+    private Chart SpiderChart;
+  
+    List<string> ColorScheme = new List<string> () {"#007bff", "17a2b8", "#ffc107", "28a745"};
+    
+    private List<Dictionary<string, object>> interstsData = new List<Dictionary<string, object>> ()
+        {
+            new Dictionary<string, object> {{ "field", "Entertainment" }, { "male", 53 }, { "female", 48 }},
+            new Dictionary<string, object> {{ "field", "Technology" }, { "male", 80 }, { "female", 13 }},
+            new Dictionary<string, object> {{ "field", "Politics" }, { "male", 13 }, { "female", 11 }},
+            new Dictionary<string, object> {{ "field", "Art" }, { "male", 19 }, { "female", 62 }},
+            new Dictionary<string, object> {{ "field", "Sports" }, { "male", 49 }, { "female", 7 }}
+
+        };
+
+    Smart.Blazor.ChartXAxis interestsXAxis = new Smart.Blazor.ChartXAxis ()
+    {
+        DataField = "field",
+        DisplayText = "Field",
+        ValuesOnTicks = true,
+        Labels = new ChartLabels() { AutoRotate = true }
+    };
+
+    List<Smart.Blazor.ChartSeriesGroup> interestsSeriesGroups = new List<Smart.Blazor.ChartSeriesGroup>(){
+            new Smart.Blazor.ChartSeriesGroup()
+        {
+            Spider= true,
+            StartAngle= 0,
+            EndAngle = 360,
+            Radius = 100,
+            Type = Smart.Blazor.ChartType.Area,
+            ValueAxis = new Smart.Blazor.ChartValueAxis()
+            {
+                UnitInterval = 10,
+                MinValue = 0,
+                MaxValue = 80,
+                Description = "Some description"
+            },
+            Series = new List<Smart.Blazor.ChartSeriesGroupSerie>()
+{
+                    new Smart.Blazor.ChartSeriesGroupSerie()
+                    {
+                        DataField = "male",
+                        DisplayText = "Male",
+                        LineWidth = 2,
+                        Radius= 50,
+                        SymbolType = Smart.Blazor.ChartSymbolType.Circle
+                    },
+                    new Smart.Blazor.ChartSeriesGroupSerie()
+                    {
+                        DataField = "female",
+                        DisplayText = "Female",
+                        LineWidth = 2,
+                        Radius= 50,
+                        SymbolType = Smart.Blazor.ChartSymbolType.Diamond
+                    }
+                }
+            }
+    };
+
+    private void OnChartReady (Chart chart) 
+    {
+        Console.WriteLine(123);
+      
+        @* chart.Refresh(); *@
+    }
+}
